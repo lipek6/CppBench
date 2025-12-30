@@ -6,7 +6,7 @@
 #include <thread>           // Configure multi-core usage
 #include <cmath>            // To calculate standard deviation
 
-
+FILE *result_log = fopen("bench.out", "w");
 
 // Change the macro values below to modify some test configurations
 #define VARIABLE_TEST_1         10000000000   // Add +1 10 Billion times in a single thread
@@ -38,11 +38,11 @@ int main (void)
     int tests   = 1;                                    // Number of tests to be performed (input will overwrite the 1)
     int threads = std::thread::hardware_concurrency();  // Counts the machine's thread quantity
 
-    FILE *result_log = fopen("bench.out", "w");
 
-    fprintf(result_log, "Starting benchmark processes on your machine\n");
-    fprintf(result_log, "Determine how many times you would like to run the tests: \n");
+    printf("Starting benchmark processes on your machine\n");
+    printf("Determine how many times you would like to run the tests: \n");
     scanf("%i", &tests);
+    printf("Results are gonna be available on 'bench.out' \n");
 
 
 
@@ -155,10 +155,10 @@ int main (void)
         fprintf(result_log, "\n");
         fprintf(result_log, "---------------------------Averages Obtained---------------------------\n");
 
-        fprintf(result_log, "| CPU 1 core      | Real: %-10.4Lf s | CPU        %-10.4Lf s   |\n", single_real_time_average, single_cpu_time_average);
-        fprintf(result_log, "| CPU multithread | Real: %-10.4Lf s | CPU        %-10.4Lf s   |\n", multi_real_time_average,  multi_cpu_time_average);
-        fprintf(result_log, "| DISK write      | Time: %-9.4Lf s | Speed      %-9.2Lf MB/s |\n", disk_write_time_average,  disk_write_rate_average);
-        fprintf(result_log, "| DISK read       | Time: %-9.4Lf s | Speed      %-9.2Lf MB/s |\n", disk_read_time_average,   disk_read_rate_average);
+        fprintf(result_log, "| CPU 1 core      | Real: %-10.4Lf s| CPU        %-10.4Lf s   |\n", single_real_time_average, single_cpu_time_average);
+        fprintf(result_log, "| CPU multithread | Real: %-10.4Lf s| CPU        %-10.4Lf s   |\n", multi_real_time_average,  multi_cpu_time_average);
+        fprintf(result_log, "| DISK write      | Time: %-9.4Lf  s| Speed      %-9.2Lf MB/s |\n", disk_write_time_average,  disk_write_rate_average);
+        fprintf(result_log, "| DISK read       | Time: %-9.4Lf  s| Speed      %-9.2Lf MB/s |\n", disk_read_time_average,   disk_read_rate_average);
 
         fprintf(result_log, "--------------------------------------------------------------------\n");
 
@@ -179,10 +179,10 @@ int main (void)
         fprintf(result_log, "\n");        
         fprintf(result_log, "--------------------------Standard Deviations---------------------------\n");
 
-        fprintf(result_log, "| CPU 1 core      | Real: %-10.4Lf s | CPU        %-10.4Lf s   |\n", d_single_real, d_single_cpu);
-        fprintf(result_log, "| CPU multithread | Real: %-10.4Lf s | CPU        %-10.4Lf s   |\n", d_multi_real,  d_multi_cpu);
-        fprintf(result_log, "| DISK write      | Time: %-9.4Lf s | Speed      %-9.2Lf MB/s |\n", d_write_time,  d_write_rate);
-        fprintf(result_log, "| DISK read       | Time: %-9.4Lf s | Speed      %-9.2Lf MB/s |\n", d_read_time,   d_read_rate);
+        fprintf(result_log, "| CPU 1 core      | Real: %-10.4Lf s| CPU        %-10.4Lf s   |\n", d_single_real, d_single_cpu);
+        fprintf(result_log, "| CPU multithread | Real: %-10.4Lf s| CPU        %-10.4Lf s   |\n", d_multi_real,  d_multi_cpu);
+        fprintf(result_log, "| DISK write      | Time: %-9.4Lf  s| Speed      %-9.2Lf MB/s |\n", d_write_time,  d_write_rate);
+        fprintf(result_log, "| DISK read       | Time: %-9.4Lf  s| Speed      %-9.2Lf MB/s |\n", d_read_time,   d_read_rate);
         fprintf(result_log, "--------------------------------------------------------------------\n");
 
         remove("teste.bin");
@@ -278,21 +278,23 @@ void disk_write_test (long double *time_spent, long double *throughput)
 
         // allocates memory
         vetor = (int*) malloc(VARIABLE_TEST_3 * sizeof(int));
-        if (vetor == NULL) {
-            // Note: result_log is not visible here in the original code scope, leading to a compile error
-            // fprintf(result_log, "Error: insufficient memory!\n"); 
+        if (vetor == NULL)
+        {
+            fprintf(result_log, "Error: insufficient memory!\n"); 
             printf("Error: insufficient memory!\n"); 
             exit(1);
         }
 
         // fills the vector
-        for (int i = 0; i < VARIABLE_TEST_3; i++) {
+        for (int i = 0; i < VARIABLE_TEST_3; i++)
+        {
             vetor[i] = i % 256;
         }
 
         arquivo = fopen("teste.bin", "wb");
-        if (arquivo == NULL) {
-            // fprintf(result_log, "Error opening file for writing!\n");
+        if (arquivo == NULL)
+        {
+            fprintf(result_log, "Error opening file for writing!\n");
             printf("Error opening file for writing!\n");
             free(vetor);
             exit(1);
@@ -320,15 +322,17 @@ void disk_read_test (long double *time_spent, long double *throughput)
         FILE *arquivo;
 
         vetor = (int*) malloc(VARIABLE_TEST_4 * sizeof(int));
-        if (vetor == NULL) {
-            // fprintf(result_log, "Error: insufficient memory!\n");
+        if (vetor == NULL)
+        {
+            fprintf(result_log, "Error: insufficient memory!\n");
             printf("Error: insufficient memory!\n");
             exit(1);
         }
 
         arquivo = fopen("teste.bin", "rb");
-        if (arquivo == NULL) {
-            // fprintf(result_log, "Error opening file for reading!\n");
+        if (arquivo == NULL)
+        {
+            fprintf(result_log, "Error opening file for reading!\n");
             printf("Error opening file for reading!\n");
             free(vetor);
             exit(1);
