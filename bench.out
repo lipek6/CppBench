@@ -1,15 +1,15 @@
 Testing CPU:
 1. Testing only 1 core
-Real execution time    1: 13.786315 seconds
-CPU execution time     1: 13.781354 seconds
+Real execution time    1: 11.742863 seconds
+CPU execution time     1: 11.699638 seconds
 
 2. Testing multiple cores (8 logical cores on your machine)
-Real execution time    1: 2.158656 seconds
-CPU execution time     1: 14.811505 seconds
+Real execution time    1: 2.447612 seconds
+CPU execution time     1: 14.137571 seconds
 
 3. Testing disk write and read
-Write time 1: 1.784176 seconds | Rate: 534.52 MB/s
-Read time  1: 0.577191 seconds | Rate: 1652.27 MB/s
+Write time 1: 2.179350 seconds | Rate: 437.60 MB/s
+Read time  1: 0.666994 seconds | Rate: 1429.81 MB/s
 
 
 ------------------------------Tests Concluded------------------------------
@@ -17,30 +17,30 @@ Read time  1: 0.577191 seconds | Rate: 1652.27 MB/s
 
 CPU results using only 1 core:
 ----------------------------------------------------
-|Test 0: Real Time 13.786315s| CPU Time 13.781354s|
+|Test 0: Real Time 11.742863s| CPU Time 11.699638s|
 ----------------------------------------------------
 
 CPU results using all 8 threads:
 ----------------------------------------------------
-|Test 0: Real Time 2.158656s| CPU Time 14.811505s|
+|Test 0: Real Time 2.447612s| CPU Time 14.137571s|
 ----------------------------------------------------
 
 Disk write results:
 ----------------------------------------
-|Time : 1.784176s| Rate 534.518032MB/s|
+|Time : 2.179350s| Rate 437.595687MB/s|
 ----------------------------------------
 
 Disk read results:
 ---------------------------------------
-|Time : 0.577191s| Rate 1652.267367MB/s|
+|Time : 0.666994s| Rate 1429.808780MB/s|
 ---------------------------------------
 
 
 ---------------------------Averages Obtained---------------------------
-| CPU 1 core      | Real: 13.7863    s| CPU        13.7814    s   |
-| CPU multithread | Real: 2.1587     s| CPU        14.8115    s   |
-| DISK write      | Time: 1.7842     s| Speed      534.52    MB/s |
-| DISK read       | Time: 0.5772     s| Speed      1652.27   MB/s |
+| CPU 1 core      | Real: 11.7429    s| CPU        11.6996    s   |
+| CPU multithread | Real: 2.4476     s| CPU        14.1376    s   |
+| DISK write      | Time: 2.1794     s| Speed      437.60    MB/s |
+| DISK read       | Time: 0.6670     s| Speed      1429.81   MB/s |
 --------------------------------------------------------------------
 
 --------------------------Standard Deviations---------------------------

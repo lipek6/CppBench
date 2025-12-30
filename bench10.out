@@ -1,0 +1,141 @@
+Testing CPU:
+1. Testing only 1 core
+Real execution time    1: 15.629819 seconds
+CPU execution time     1: 15.622810 seconds
+Real execution time    2: 9.781440 seconds
+CPU execution time     2: 9.763575 seconds
+Real execution time    3: 8.153364 seconds
+CPU execution time     3: 8.142463 seconds
+Real execution time    4: 9.962417 seconds
+CPU execution time     4: 9.949900 seconds
+Real execution time    5: 11.496555 seconds
+CPU execution time     5: 11.495169 seconds
+Real execution time    6: 8.284703 seconds
+CPU execution time     6: 8.283769 seconds
+Real execution time    7: 9.317975 seconds
+CPU execution time     7: 9.316935 seconds
+Real execution time    8: 5.675129 seconds
+CPU execution time     8: 5.674595 seconds
+Real execution time    9: 6.369168 seconds
+CPU execution time     9: 6.368486 seconds
+Real execution time    10: 9.885379 seconds
+CPU execution time     10: 9.873313 seconds
+
+2. Testing multiple cores (8 logical cores on your machine)
+Real execution time    1: 2.253245 seconds
+CPU execution time     1: 15.211561 seconds
+Real execution time    2: 2.058082 seconds
+CPU execution time     2: 14.558130 seconds
+Real execution time    3: 2.137797 seconds
+CPU execution time     3: 14.699457 seconds
+Real execution time    4: 2.116409 seconds
+CPU execution time     4: 14.615661 seconds
+Real execution time    5: 2.223794 seconds
+CPU execution time     5: 15.124375 seconds
+Real execution time    6: 2.290059 seconds
+CPU execution time     6: 15.356266 seconds
+Real execution time    7: 2.409354 seconds
+CPU execution time     7: 14.693433 seconds
+Real execution time    8: 2.377789 seconds
+CPU execution time     8: 15.138283 seconds
+Real execution time    9: 2.232650 seconds
+CPU execution time     9: 15.164244 seconds
+Real execution time    10: 2.447651 seconds
+CPU execution time     10: 15.102119 seconds
+
+3. Testing disk write and read
+Write time 1: 1.839533 seconds | Rate: 518.43 MB/s
+Read time  1: 0.604116 seconds | Rate: 1578.63 MB/s
+Write time 2: 2.070834 seconds | Rate: 460.53 MB/s
+Read time  2: 0.581922 seconds | Rate: 1638.84 MB/s
+Write time 3: 2.003888 seconds | Rate: 475.91 MB/s
+Read time  3: 0.584624 seconds | Rate: 1631.26 MB/s
+Write time 4: 1.996323 seconds | Rate: 477.72 MB/s
+Read time  4: 0.582771 seconds | Rate: 1636.45 MB/s
+Write time 5: 2.003170 seconds | Rate: 476.08 MB/s
+Read time  5: 0.582618 seconds | Rate: 1636.88 MB/s
+Write time 6: 2.003664 seconds | Rate: 475.97 MB/s
+Read time  6: 0.584606 seconds | Rate: 1631.31 MB/s
+Write time 7: 1.991065 seconds | Rate: 478.98 MB/s
+Read time  7: 0.577113 seconds | Rate: 1652.49 MB/s
+Write time 8: 1.996167 seconds | Rate: 477.75 MB/s
+Read time  8: 0.575459 seconds | Rate: 1657.24 MB/s
+Write time 9: 1.992587 seconds | Rate: 478.61 MB/s
+Read time  9: 0.576508 seconds | Rate: 1654.23 MB/s
+Write time 10: 1.996765 seconds | Rate: 477.61 MB/s
+Read time  10: 0.577417 seconds | Rate: 1651.62 MB/s
+
+
+------------------------------Tests Concluded------------------------------
+
+
+CPU results using only 1 core:
+----------------------------------------------------
+|Test 0: Real Time 15.629819s| CPU Time 15.622810s|
+|Test 1: Real Time 9.781440s| CPU Time 9.763575s|
+|Test 2: Real Time 8.153364s| CPU Time 8.142463s|
+|Test 3: Real Time 9.962417s| CPU Time 9.949900s|
+|Test 4: Real Time 11.496555s| CPU Time 11.495169s|
+|Test 5: Real Time 8.284703s| CPU Time 8.283769s|
+|Test 6: Real Time 9.317975s| CPU Time 9.316935s|
+|Test 7: Real Time 5.675129s| CPU Time 5.674595s|
+|Test 8: Real Time 6.369168s| CPU Time 6.368486s|
+|Test 9: Real Time 9.885379s| CPU Time 9.873313s|
+----------------------------------------------------
+
+CPU results using all 8 threads:
+----------------------------------------------------
+|Test 0: Real Time 2.253245s| CPU Time 15.211561s|
+|Test 1: Real Time 2.058082s| CPU Time 14.558130s|
+|Test 2: Real Time 2.137797s| CPU Time 14.699457s|
+|Test 3: Real Time 2.116409s| CPU Time 14.615661s|
+|Test 4: Real Time 2.223794s| CPU Time 15.124375s|
+|Test 5: Real Time 2.290059s| CPU Time 15.356266s|
+|Test 6: Real Time 2.409354s| CPU Time 14.693433s|
+|Test 7: Real Time 2.377789s| CPU Time 15.138283s|
+|Test 8: Real Time 2.232650s| CPU Time 15.164244s|
+|Test 9: Real Time 2.447651s| CPU Time 15.102119s|
+----------------------------------------------------
+
+Disk write results:
+----------------------------------------
+|Time : 1.839533s| Rate 518.432761MB/s|
+|Time : 2.070834s| Rate 460.526654MB/s|
+|Time : 2.003888s| Rate 475.911964MB/s|
+|Time : 1.996323s| Rate 477.715540MB/s|
+|Time : 2.003170s| Rate 476.082464MB/s|
+|Time : 2.003664s| Rate 475.965186MB/s|
+|Time : 1.991065s| Rate 478.976934MB/s|
+|Time : 1.996167s| Rate 477.752720MB/s|
+|Time : 1.992587s| Rate 478.611136MB/s|
+|Time : 1.996765s| Rate 477.609655MB/s|
+----------------------------------------
+
+Disk read results:
+---------------------------------------
+|Time : 0.604116s| Rate 1578.628455MB/s|
+|Time : 0.581922s| Rate 1638.835690MB/s|
+|Time : 0.584624s| Rate 1631.261807MB/s|
+|Time : 0.582771s| Rate 1636.446913MB/s|
+|Time : 0.582618s| Rate 1636.876174MB/s|
+|Time : 0.584606s| Rate 1631.311118MB/s|
+|Time : 0.577113s| Rate 1652.492484MB/s|
+|Time : 0.575459s| Rate 1657.239977MB/s|
+|Time : 0.576508s| Rate 1654.226394MB/s|
+|Time : 0.577417s| Rate 1651.621419MB/s|
+---------------------------------------
+
+
+---------------------------Averages Obtained---------------------------
+| CPU 1 core      | Real: 9.4556     s| CPU        9.4491     s   |
+| CPU multithread | Real: 2.2547     s| CPU        14.9664    s   |
+| DISK write      | Time: 1.9894     s| Speed      479.76    MB/s |
+| DISK read       | Time: 0.5827     s| Speed      1636.89   MB/s |
+--------------------------------------------------------------------
+
+--------------------------Standard Deviations---------------------------
+| CPU 1 core      | Real: 2.6408     s| CPU        2.6391     s   |
+| CPU multithread | Real: 0.1227     s| CPU        0.2756     s   |
+| DISK write      | Time: 0.0546     s| Speed      13.87     MB/s |
+| DISK read       | Time: 0.0079     s| Speed      21.53     MB/s |
+--------------------------------------------------------------------
