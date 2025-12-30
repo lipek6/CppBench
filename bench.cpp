@@ -1,53 +1,53 @@
-#include <iostream>         // Padrão de usar em códigos de C++
-#include <vector>           // Para poder utilizar vetores
-#include <numeric>          // Facilitar somas dos vetores
-#include <chrono>           // Monitorar o tempo real de execução
-#include <ctime>            // Monitorar o tempo da CPU de execução
-#include <thread>           // Configurar o uso de múltiplos núcleos
-#include <cmath>            // Para calcularmos o desvio padrão
+#include <iostream>         // Standard C++ usage
+#include <vector>           // To use vectors
+#include <numeric>          // To facilitate vector sums
+#include <chrono>           // Monitor real execution time
+#include <ctime>            // Monitor CPU execution time
+#include <thread>           // Configure multi-core usage
+#include <cmath>            // To calculate standard deviation
 
 
 
-// Troque os valores dos macros à baixo para modificar algumas configurações dos testes
-#define VARIABLE_TEST_1         10000000000   // Somar +1 10 Bilhões de vezes em um único thread
-#define VARIABLE_TEST_2         10000000000   // Somar +1 625 Milhões de vezes em x threads (total de 1 Bilhão)
-#define VARIABLE_TEST_3         250000000     // 250 Milhões de ints para gravar em disco (1 GB)
-#define VARIABLE_TEST_4         250000000     // 250 Milhões de ints para ler do disco (1 GB)
+// Change the macro values below to modify some test configurations
+#define VARIABLE_TEST_1         10000000000   // Add +1 10 Billion times in a single thread
+#define VARIABLE_TEST_2         10000000000   // Add +1 625 Million times in x threads (total 1 Billion)
+#define VARIABLE_TEST_3         250000000     // 250 Million ints to write to disk (1 GB)
+#define VARIABLE_TEST_4         250000000     // 250 Million ints to read from disk (1 GB)
 
 
 
-// Variáveis globais para testes em multithread
+// Global variables for multithread tests
 volatile long long multithread_destiny = 0;
 
 
 
-// Declaração das funções que usaremos, você verá essas funções abaixo de main()
+// Declaration of functions we will use; you will see these functions below main()
 void cpu_test1       (long double *real_time_spent, long double *cpu_time_spent);
 void cpu_test2       (long double *real_time_spent, long double *cpu_time_spent, int thread_count);
 void disk_write_test (long double *time_spent, long double *throughput);
 void disk_read_test  (long double *time_spent, long double *throughput);
 void thread_function (long long *destiny, long long operations);
 
-// Declaração de funções auxiliares
+// Helper functions declaration
 long double deviation (const std::vector<long double>& vector, long double average, int n);
 long double average(const std::vector<long double>& vector);
 
 
 int main (void)
 {
-    int tests   = 1;                                    // Quantidade de testes que serão realizados (input sobrescreverá o 1)
-    int threads = std::thread::hardware_concurrency();  // Conta a quantidade de threads da máquina
+    int tests   = 1;                                    // Number of tests to be performed (input will overwrite the 1)
+    int threads = std::thread::hardware_concurrency();  // Counts the machine's thread quantity
 
-    
+    FILE *result_log = fopen("bench.out", "w");
 
-    printf("Iniciando processos de benchmark da sua máquina\n");
-    printf("Determine quantas vezes você gostaria de rodar os testes: \n");
+    fprintf(result_log, "Starting benchmark processes on your machine\n");
+    fprintf(result_log, "Determine how many times you would like to run the tests: \n");
     scanf("%i", &tests);
 
 
 
-    // Declaração de vetores para registrar run time. Serão enviadas para cada função_teste via endereço
-    // RELACIONADO À CPU
+    // Declaration of vectors to register run time. Sent to each test_function via address
+    // RELATED TO CPU
     std::vector<long double> real_time_singcore(tests);
     std::vector<long double> cpu_time_singcore(tests);
     
@@ -55,7 +55,7 @@ int main (void)
     std::vector<long double> cpu_time_multcore(tests);
 
 
-    // RELACIONADO AO DISCO
+    // RELATED TO DISK
     std::vector<long double> time_write(tests);
     std::vector<long double> rate_write(tests);
 
@@ -63,80 +63,80 @@ int main (void)
     std::vector<long double> rate_read (tests);
 
 
-    // Início dos testes
-    printf("Testando o CPU:\n");
+    // Start of tests
+    fprintf(result_log, "Testing CPU:\n");
 
-        printf("1. Testando apenas 1 núcleo\n");
+        fprintf(result_log, "1. Testing only 1 core\n");
         for(int i = 0; i < tests; i++)
         {
             cpu_test1(&real_time_singcore[i], &cpu_time_singcore[i]);
-            printf("Tempo de execução real    %i: %Lf segundos\n", (i+1), real_time_singcore[i]);
-            printf("Tempo de execução da CPU  %i: %Lf segundos\n", (i+1),  cpu_time_singcore[i]);
+            fprintf(result_log, "Real execution time    %i: %Lf seconds\n", (i+1), real_time_singcore[i]);
+            fprintf(result_log, "CPU execution time     %i: %Lf seconds\n", (i+1),  cpu_time_singcore[i]);
         }
-        printf("\n");
+        fprintf(result_log, "\n");
 
-        printf("2. Testando múltiplos núcleos (%i núcleos lógicos da sua máquina)\n", threads);
+        fprintf(result_log, "2. Testing multiple cores (%i logical cores on your machine)\n", threads);
         for(int i = 0; i < tests; i++)
         {
             cpu_test2(&real_time_multcore[i], &cpu_time_multcore[i], threads);
-            printf("Tempo de execução real    %i: %Lf segundos\n", (i+1), real_time_multcore[i]);
-            printf("Tempo de execução da CPU  %i: %Lf segundos\n", (i+1),  cpu_time_multcore[i]);
+            fprintf(result_log, "Real execution time    %i: %Lf seconds\n", (i+1), real_time_multcore[i]);
+            fprintf(result_log, "CPU execution time     %i: %Lf seconds\n", (i+1),  cpu_time_multcore[i]);
         }
-        printf("\n");
+        fprintf(result_log, "\n");
 
-        printf("3. Testando escrita e leitura em disco\n");
+        fprintf(result_log, "3. Testing disk write and read\n");
         for(int i = 0; i < tests; i++)
         {
             disk_write_test(&time_write[i], &rate_write[i]);
-            printf("Tempo de escrita %i: %Lf segundos | Taxa: %.2Lf MB/s\n", (i+1), time_write[i], rate_write[i]);
+            fprintf(result_log, "Write time %i: %Lf seconds | Rate: %.2Lf MB/s\n", (i+1), time_write[i], rate_write[i]);
            
             disk_read_test(&time_read[i], &rate_read[i]);
-            printf("Tempo de leitura %i: %Lf segundos | Taxa: %.2Lf MB/s\n", (i+1), time_read[i], rate_read[i]);
+            fprintf(result_log, "Read time  %i: %Lf seconds | Rate: %.2Lf MB/s\n", (i+1), time_read[i], rate_read[i]);
         }
-        printf("\n");
+        fprintf(result_log, "\n");
 
 
-        printf("\n");
-        printf("------------------------------Testes concluídos------------------------------\n");
-        printf("\n");
-        printf("\n");
+        fprintf(result_log, "\n");
+        fprintf(result_log, "------------------------------Tests Concluded------------------------------\n");
+        fprintf(result_log, "\n");
+        fprintf(result_log, "\n");
 
 
-        printf("Resultados da CPU utilizando apenas 1 núcleo:\n");
-        printf("----------------------------------------------------\n");
+        fprintf(result_log, "CPU results using only 1 core:\n");
+        fprintf(result_log, "----------------------------------------------------\n");
         for (int i = 0; i < tests; i++)
         {
-            printf("|Teste %i: Tempo real %Lfs| Tempo CPU %Lfs|\n", i, real_time_singcore[i], cpu_time_singcore[i]);
+            fprintf(result_log, "|Test %i: Real Time %Lfs| CPU Time %Lfs|\n", i, real_time_singcore[i], cpu_time_singcore[i]);
         }
-        printf("----------------------------------------------------\n");
-        printf("\n");
+        fprintf(result_log, "----------------------------------------------------\n");
+        fprintf(result_log, "\n");
 
-        printf("Resultados da CPU utilizando todos os %i threads:\n", threads);
-        printf("----------------------------------------------------\n");
+        fprintf(result_log, "CPU results using all %i threads:\n", threads);
+        fprintf(result_log, "----------------------------------------------------\n");
         for (int i = 0; i < tests; i++)
         {
-            printf("|Teste %i: Tempo real %Lfs| Tempo CPU %Lfs|\n", i, real_time_multcore[i], cpu_time_multcore[i]);
+            fprintf(result_log, "|Test %i: Real Time %Lfs| CPU Time %Lfs|\n", i, real_time_multcore[i], cpu_time_multcore[i]);
         }
-        printf("----------------------------------------------------\n");
-        printf("\n");
+        fprintf(result_log, "----------------------------------------------------\n");
+        fprintf(result_log, "\n");
 
-        printf("Resultados da escrita em disco:\n");
-        printf("----------------------------------------\n");
+        fprintf(result_log, "Disk write results:\n");
+        fprintf(result_log, "----------------------------------------\n");
         for (int i = 0; i < tests; i++)
         {
-            printf("|Tempo : %Lfs| Taxa %LfMB/s|\n", time_write[i], rate_write[i]);
+            fprintf(result_log, "|Time : %Lfs| Rate %LfMB/s|\n", time_write[i], rate_write[i]);
         }
-        printf("----------------------------------------\n");
-        printf("\n");
+        fprintf(result_log, "----------------------------------------\n");
+        fprintf(result_log, "\n");
 
-        printf("Resultados da leitura em disco:\n");
-        printf("---------------------------------------\n");
+        fprintf(result_log, "Disk read results:\n");
+        fprintf(result_log, "---------------------------------------\n");
         for (int i = 0; i < tests; i++)
         {
-            printf("|Tempo : %Lfs| Taxa %LfMB/s|\n", time_read[i], rate_read[i]);
+            fprintf(result_log, "|Time : %Lfs| Rate %LfMB/s|\n", time_read[i], rate_read[i]);
         }
-        printf("---------------------------------------\n");
-        printf("\n");
+        fprintf(result_log, "---------------------------------------\n");
+        fprintf(result_log, "\n");
 
 
         long double single_real_time_average = average(real_time_singcore);
@@ -152,15 +152,15 @@ int main (void)
         long double disk_read_rate_average   = average(rate_read);      
         
         
-        printf("\n");
-        printf("---------------------------Médias obtidas---------------------------\n");
+        fprintf(result_log, "\n");
+        fprintf(result_log, "---------------------------Averages Obtained---------------------------\n");
 
-        printf("| CPU 1 núcleo    | Real: %-10.4Lf s | CPU        %-10.4Lf s   |\n", single_real_time_average, single_cpu_time_average);
-        printf("| CPU multithread | Real: %-10.4Lf s | CPU        %-10.4Lf s   |\n", multi_real_time_average,  multi_cpu_time_average);
-        printf("| DISCO escrita   | Tempo: %-9.4Lf s | Velocidade %-9.2Lf MB/s |\n", disk_write_time_average,  disk_write_rate_average);
-        printf("| DISCO leitura   | Tempo: %-9.4Lf s | Velocidade %-9.2Lf MB/s |\n", disk_read_time_average,   disk_read_rate_average);
+        fprintf(result_log, "| CPU 1 core      | Real: %-10.4Lf s | CPU        %-10.4Lf s   |\n", single_real_time_average, single_cpu_time_average);
+        fprintf(result_log, "| CPU multithread | Real: %-10.4Lf s | CPU        %-10.4Lf s   |\n", multi_real_time_average,  multi_cpu_time_average);
+        fprintf(result_log, "| DISK write      | Time: %-9.4Lf s | Speed      %-9.2Lf MB/s |\n", disk_write_time_average,  disk_write_rate_average);
+        fprintf(result_log, "| DISK read       | Time: %-9.4Lf s | Speed      %-9.2Lf MB/s |\n", disk_read_time_average,   disk_read_rate_average);
 
-        printf("--------------------------------------------------------------------\n");
+        fprintf(result_log, "--------------------------------------------------------------------\n");
 
         
         long double d_single_real = deviation(real_time_singcore, single_real_time_average, tests); 
@@ -176,14 +176,14 @@ int main (void)
         long double d_read_rate = deviation(rate_read, disk_read_rate_average, tests); 
 
 
-        printf("\n");        
-        printf("--------------------------Desvios padrões---------------------------\n");
+        fprintf(result_log, "\n");        
+        fprintf(result_log, "--------------------------Standard Deviations---------------------------\n");
 
-        printf("| CPU 1 núcleo    | Real: %-10.4Lf s | CPU        %-10.4Lf s   |\n", d_single_real, d_single_cpu);
-        printf("| CPU multithread | Real: %-10.4Lf s | CPU        %-10.4Lf s   |\n", d_multi_real,  d_multi_cpu);
-        printf("| DISCO escrita   | Tempo: %-9.4Lf s | Velocidade %-9.2Lf MB/s |\n", d_write_time,  d_write_rate);
-        printf("| DISCO leitura   | Tempo: %-9.4Lf s | Velocidade %-9.2Lf MB/s |\n", d_read_time,   d_read_rate);
-        printf("--------------------------------------------------------------------\n");
+        fprintf(result_log, "| CPU 1 core      | Real: %-10.4Lf s | CPU        %-10.4Lf s   |\n", d_single_real, d_single_cpu);
+        fprintf(result_log, "| CPU multithread | Real: %-10.4Lf s | CPU        %-10.4Lf s   |\n", d_multi_real,  d_multi_cpu);
+        fprintf(result_log, "| DISK write      | Time: %-9.4Lf s | Speed      %-9.2Lf MB/s |\n", d_write_time,  d_write_rate);
+        fprintf(result_log, "| DISK read       | Time: %-9.4Lf s | Speed      %-9.2Lf MB/s |\n", d_read_time,   d_read_rate);
+        fprintf(result_log, "--------------------------------------------------------------------\n");
 
         remove("teste.bin");
 }
@@ -192,7 +192,7 @@ int main (void)
 
 
 
-// Funções para os testes. Chamadas em main(), declaradas acima de main().
+// Functions for the tests. Called in main(), declared above main().
 void cpu_test1 (long double *real_time_spent, long double *cpu_time_spent)
 {
     using namespace std::chrono;
@@ -222,26 +222,26 @@ void cpu_test2 (long double *real_time_spent, long double *cpu_time_spent, int t
     high_resolution_clock::time_point real_time_initial = high_resolution_clock::now();
     clock_t cpu_time_initial = clock();
         
-        std::vector<std::thread> threads;                               // Vetor de threads com a quantidade de threads da máquina
-        std::vector<long long> results(thread_count);                   // Vetor para armazeanar os resultados de cada uma das threads
-        long long total_sum = 0;                                        // Soma do resultado de cada uma das threads
-        long long work_per_thread = VARIABLE_TEST_2 / thread_count;     // Tamanho do trabalho que cada thread deve executar
+        std::vector<std::thread> threads;                               // Vector of threads with the machine's thread quantity
+        std::vector<long long> results(thread_count);                   // Vector to store results of each thread
+        long long total_sum = 0;                                        // Sum of the result of each thread
+        long long work_per_thread = VARIABLE_TEST_2 / thread_count;     // Amount of work each thread must execute
         
 
-        // Inicialização de threads para executarem a função thread_function
+        // Initialization of threads to execute the function thread_function
         for (int i = 0; i < thread_count; ++i)
         {
             threads.emplace_back(thread_function, &results[i], work_per_thread);
         }
 
         
-        // Esperamos pela conclusão de todos os threads para reuni-los
+        // Wait for all threads to complete to join them
         for (auto &thread : threads)
         {
             thread.join();
         }
 
-        //Soma do resultado de cada thread
+        // Sum of the result of each thread
         for(long long val : results) 
         {
             total_sum += val;
@@ -276,21 +276,24 @@ void disk_write_test (long double *time_spent, long double *throughput)
         int *vetor;
         FILE *arquivo;
 
-        // aloca memória
+        // allocates memory
         vetor = (int*) malloc(VARIABLE_TEST_3 * sizeof(int));
         if (vetor == NULL) {
-            printf("Erro: memória insuficiente!\n");
+            // Note: result_log is not visible here in the original code scope, leading to a compile error
+            // fprintf(result_log, "Error: insufficient memory!\n"); 
+            printf("Error: insufficient memory!\n"); 
             exit(1);
         }
 
-        // preenche o vetor
+        // fills the vector
         for (int i = 0; i < VARIABLE_TEST_3; i++) {
             vetor[i] = i % 256;
         }
 
         arquivo = fopen("teste.bin", "wb");
         if (arquivo == NULL) {
-            printf("Erro ao abrir arquivo para escrita!\n");
+            // fprintf(result_log, "Error opening file for writing!\n");
+            printf("Error opening file for writing!\n");
             free(vetor);
             exit(1);
         }
@@ -318,13 +321,15 @@ void disk_read_test (long double *time_spent, long double *throughput)
 
         vetor = (int*) malloc(VARIABLE_TEST_4 * sizeof(int));
         if (vetor == NULL) {
-            printf("Erro: memória insuficiente!\n");
+            // fprintf(result_log, "Error: insufficient memory!\n");
+            printf("Error: insufficient memory!\n");
             exit(1);
         }
 
         arquivo = fopen("teste.bin", "rb");
         if (arquivo == NULL) {
-            printf("Erro ao abrir arquivo para leitura!\n");
+            // fprintf(result_log, "Error opening file for reading!\n");
+            printf("Error opening file for reading!\n");
             free(vetor);
             exit(1);
         }
@@ -342,7 +347,7 @@ void disk_read_test (long double *time_spent, long double *throughput)
     free(vetor);
 }
 
-// Funções auxiliares para cácluos matemáticos repetitivos
+// Helper functions for repetitive mathematical calculations
 long double deviation (const std::vector<long double>& vector, long double average, int n)
 {
     if (n < 2) 
